@@ -1,0 +1,29 @@
+[package]
+name = "inklings"
+version = "0.1.0"
+edition = "2021"
+authors = ["Your Name <your.email@example.com>"]
+description = "Small exercises to get you used to reading and writing ink! smart contracts"
+repository = "https://github.com/lynette7/ink-lings"
+license = "MIT"
+keywords = ["ink", "polkadot", "smart-contracts", "tutorial", "learning"]
+categories = ["development-tools", "command-line-utilities"]
+
+[[bin]]
+name = "inklings"
+path = "src/main.rs"
+
+[dependencies]
+clap = { version = "4.0", features = ["derive"] }
+serde = { version = "1.0", features = ["derive"] }
+toml = "0.8"
+colored = "2.0"
+indicatif = "0.17"
+console = "0.15"
+notify = "6.0"
+tokio = { version = "1.0", features = ["full"] }
+anyhow = "1.0"
+which = "4.4"
+
+[dev-dependencies]
+tempfile = "3.8"
