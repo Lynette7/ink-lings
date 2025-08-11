@@ -14,16 +14,17 @@ name = "inklings"
 path = "src/main.rs"
 
 [dependencies]
-clap = { version = "4.0", features = ["derive"] }
-serde = { version = "1.0", features = ["derive"] }
-toml = "0.8"
-colored = "2.0"
+clap = { version = "4.5.4", features = ["derive"] }
+serde = { version = "1.0.198", features = ["derive"] }
+toml = "0.8.12"
+colored = "2.1.0"
 indicatif = "0.17"
 console = "0.15"
-notify = "6.0"
-tokio = { version = "1.0", features = ["full"] }
+notify = "6.1.1"
+tokio = { version = "1.37.0", features = ["full"] }
 anyhow = "1.0"
 which = "4.4"
+futures-util = "0.3.30"
 
 [dev-dependencies]
 tempfile = "3.8"
