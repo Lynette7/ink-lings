@@ -1,16 +1,14 @@
-use exercise::Exercise;
 use clap::{Parser, Subcommand};
 use colored::*;
-use std::process;
-
-mod exercise;
-mod run;
-mod verify;
-mod watch;
+use notify::{Config, RecommendedWatcher, RecursiveMode, Watcher};
+use std::path::PathBuf;
+use std::process::Command;
+use std::sync::mpsc::channel;
+use std::time::Duration;
 
 #[derive(Parser)]
 #[command(name = "inklings")]
-#[command(about = "Small exercises to get you used to reading and writing ink! smart contracts")]
+#[command(about = "Interactive ink! smart contract exercises", long_about = None)]
 struct Cli {
     #[command(subcommand)]
     command: Option<Commands>,
@@ -19,98 +17,143 @@ struct Cli {
 #[derive(Subcommand)]
 enum Commands {
     /// Verify a single exercise
-    Verify { name: String },
-    /// Watch exercises and rerun on file changes
-    Watch,
-    /// Run a single exercise
-    Run { name: String },
+    Verify { exercise: String },
+    /// Watch for changes and auto-verify
+    Watch { exercise: Option<String> },
+    /// Run a specific exercise
+    Run { exercise: String },
     /// Show hint for an exercise
-    Hint { name: String },
+    Hint { exercise: String },
     /// List all exercises
     List,
-    /// Reset an exercis eoi s original state
-    Reset { name: String },
+    /// Reset progress
+    Reset,
 }
 
 fn main() {
     let cli = Cli::parse();
-    
-    // Check if cargo contract is installed
-    if !check_cargo_contract() {
-        eprintln!("{}", "Error: cargo contract is not installed!".red().bold());
-        eprintln!("Please install it with: {}", "cargo install cargo-contract".yellow());
-        process::exit(1);
-    }
-
-    let exercises = match Exercise::load_exercises() {
-        Ok(exercises) => exercises,
-        Err(e) => {
-            eprintln!("{} {}", "Error loading exercises:".red().bold(), e);
-            process::exit(1);
-        }
-    };
 
     match cli.command {
-        Some(Commands::Verify { name }) => {
-            if let Some(exercise) = exercises.iter().find(|e| e.name == name) {
-                match verify::verify_exercise(exercise) {
-                    Ok(_) => println!("{} Exercise '{}' verified successfully!", "✓".green().bold(), name),
-                    Err(e) => {
-                        eprintln!("{} Exercise '{}' failed: {}", "✗".red().bold(), name, e);
-                        process::exit(1);
+        Some(Commands::Verify { exercise }) => verify_exercise(&exercise),
+        Some(Commands::Watch { exercise }) => watch_mode(exercise),
+        Some(Commands::Run { exercise }) => run_exercise(&exercise),
+        Some(Commands::Hint { exercise }) => show_hint(&exercise),
+        Some(Commands::List) => list_exercises(),
+        Some(Commands::Reset) => reset_progress(),
+        None => interactive_mode(),
+    }
+}
+
+fn verify_exercise(exercise: &str) {
+    println!("{}", format!("Verifying {}...", exercise).cyan());
+
+    let exercise_path = PathBuf::from("exercises").join(exercise);
+
+    if !exercise_path.exists() {
+        println!("{}", format!("Exercise '{}' not found!", exercise).red());
+        return;
+    }
+
+    // Check if it compiles
+    let output = Command::new("cargo")
+        .args(&["build", "--manifest-path"])
+        .arg(exercise_path.join("Cargo.toml"))
+        .output();
+
+    match output {
+        Ok(output) => {
+            if output.status.success() {
+                println!("{}", "✓ Exercise compiled successfully!".green());
+
+                // Run tests if they exist
+                let test_output = Command::new("cargo")
+                    .args(&["test", "--manifest-path"])
+                    .arg(exercise_path.join("Cargo.toml"))
+                    .output();
+
+                if let Ok(test_output) = test_output {
+                    if test_output.status.success() {
+                        println!("{}", "✓ All tests passed!".green());
+                        println!("\n{}", "🎉 Exercise completed! Move to the next one.".bright_green().bold());
+                    } else {
+                        println!("{}", "✗ Tests failed!".red());
+                        println!("{}", String::from_utf8_lossy(&test_output.stderr));
                     }
                 }
             } else {
-                eprintln!("{} Exercise '{}' not found", "✗".red().bold(), name);
-                process::exit(1);
+                println!("{}", "✗ Compilation failed!".red());
+                println!("{}", String::from_utf8_lossy(&output.stderr));
             }
         }
-        Some(Commands::Watch) => {
-            if let Err(e) = watch::watch_exercises(exercises) {
-                eprintln!("{} Watch failed: {}", "✗".red().bold(), e);
-                process::exit(1);
-            }
-        }
-        Some(Commands::Run { name }) => {
-            if let Some(exercise) = exercises.iter().find(|e| e.name == name) {
-                match run::run_exercise(exercise) {
-                    Ok(_) => println!("{} Exercise '{}' ran successfully!", "".green().bold(), name),
-                    Err(e) => {
-                        eprintln!("{} Exercise '{}' failed: {}", "✗".red().bold(), name, e);
-                        process::exit(1);
-                    }
-                }
-            } else {
-                eprintln!("{} Exercise '{}' not found", "✗".red().bold(), name);
-                process::exit(1);
-            }
-        }
-        Some(Commands::Hint { name }) => {
-            if let Some(exercise) = exercises.iter().find(|e| e.name == name) {
-                println!("{}", "Hint:".yellow().bold());
-                println!("{}", exercise.hint);
-            } else {
-                eprintln!("{} Exercise '{}' not found", "✗".red().bold(), name);
-                process::exit(1);
-            }
-        }
-        Some(Commands::List) => {
-            println!("{}", "Available exercises:".blue().bold());
-            for exercise in &exercises {
-                println!("  {} - {} ({:?})", exercise.name.cyan(), exercise.path, exercise.mode);
-            }
-        }
-        Some(Commands::Reset { name }) => {
-            println!("{}", "Reset functionality not implemented yet".yellow());
-        }
-        None => {
-            println!("{}", "Welcome to Inklings!".green().bold());
-            println!("Run {} to get started", "inklings list".cyan());
+        Err(e) => {
+            println!("{}", format!("Error running cargo: {}", e).red());
         }
     }
 }
 
-fn check_cargo_contract() -> bool {
-    which::which("cargo-contract").is_ok()
+fn watch_mode(exercise: Option<String>) {
+    println!("{}", "👀 Watching for changes...".cyan());
+    println!("{}", "Press Ctrl+C to exit".dimmed());
+
+    let (tx, rx) = channel();
+    let mut watcher = RecommendedWatcher::new(tx, Config::default()).unwrap();
+
+    let watch_path = if let Some(ex) = &exercise {
+        PathBuf::from("exercises").join(ex)
+    } else {
+        PathBuf::from("exercises")
+    };
+
+    watcher.watch(&watch_path, RecursiveMode::Recursive).unwrap();
+
+    loop {
+        match rx.recv_timeout(Duration::from_secs(1)) {
+            Ok(_) => {
+                if let Some(ref ex) = exercise {
+                    println!("\n{}", "File changed, re-verifying...".yellow());
+                    verify_exercise(ex);
+                }
+            }
+            Err(_) => {}
+        }
+    }
 }
 
+fn run_exercise(exercise: &str) {
+    println!("{}", format!("Running {}...", exercise).cyan());
+    // Implementation for running contract on local node
+    println!("{}", "Note: Contract execution requires a local node".yellow());
+}
+
+fn show_hint(exercise: &str) {
+    println!("{}", format!("Hint for {}:", exercise).cyan());
+    // Load hints from info/exercises.toml
+    println!("{}", "Hints not yet implemented - check the exercise comments!".yellow());
+}
+
+fn list_exercises() {
+    println!("{}", "Available exercises:".cyan().bold());
+    println!("\n{}", "01_intro".yellow());
+    println!("  intro1 - Your first ink! contract");
+    println!("  intro2 - Adding storage");
+}
+
+fn reset_progress() {
+    println!("{}", "Reset functionality not yet implemented".yellow());
+}
+
+fn interactive_mode() {
+    println!("{}", r#"
+  _       _    _ _                 
+ (_)_ __ | | _| (_)_ __   __ _ ___ 
+ | | '_ \| |/ / | | '_ \ / _` / __|
+ | | | | |   <| | | | | | (_| \__ \
+ |_|_| |_|_|\_\_|_|_| |_|\__, |___/
+                         |___/     
+"#.bright_cyan());
+
+    println!("{}", "Interactive ink! smart contract exercises\n".cyan());
+    println!("Run {} to get started!", "inklings list".green());
+    println!("Run {} to verify your solution", "inklings verify <exercise>".green());
+    println!("Run {} for auto-verification", "inklings watch <exercise>".green());
+}

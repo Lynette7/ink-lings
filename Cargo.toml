@@ -1,30 +1,26 @@
 [package]
-name = "inklings"
+name = "inklings-cli"
 version = "0.1.0"
-edition = "2021"
-authors = ["Your Name <your.email@example.com>"]
-description = "Small exercises to get you used to reading and writing ink! smart contracts"
-repository = "https://github.com/lynette7/ink-lings"
-license = "MIT"
-keywords = ["ink", "polkadot", "smart-contracts", "tutorial", "learning"]
-categories = ["development-tools", "command-line-utilities"]
-
-[[bin]]
-name = "inklings"
-path = "src/main.rs"
+edition = "2024"
 
 [dependencies]
-clap = { version = "4.5.4", features = ["derive"] }
-serde = { version = "1.0.198", features = ["derive"] }
-toml = "0.8.12"
-colored = "2.1.0"
+clap = { version = "4.5", features = ["derive"] }
+notify = "6.1"
+toml = "0.8"
+serde = { version = "1.0", features = ["derive"] }
+colored = "2.1"
 indicatif = "0.17"
-console = "0.15"
-notify = "6.1.1"
-tokio = { version = "1.37.0", features = ["full"] }
-anyhow = "1.0"
-which = "4.4"
-futures-util = "0.3.30"
+home = "0.5"
 
-[dev-dependencies]
-tempfile = "3.8"
+[workspace]
+members = [
+    "exercises/*/*", "exercises/01_intro/intro1",
+    "solutions/*/*", "solutions/01_intro/intro1",
+]
+resolver = "2"
+
+[workspace.dependencies]
+ink = { version = "6.0.0-alpha", default-features = false, features = ["unstable-hostfn"] }
+
+# scale = { package = "parity-scale-codec", version = "3", default-features = false, features = ["derive"] }
+scale-info = { version = "2.11.6", default-features = false, features = ["derive"] }
