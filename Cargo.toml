@@ -14,13 +14,19 @@ home = "0.5"
 
 [workspace]
 members = [
-    "exercises/*/*", "exercises/01_intro/intro1",
-    "solutions/*/*", "solutions/01_intro/intro1",
+    "exercises/*/*",
+    "exercises/01_intro/intro1",
+    "exercises/01_intro/intro2",
+    "solutions/*/*",
+    "solutions/01_intro/intro1",
+    "solutions/01_intro/intro2",
 ]
 resolver = "2"
 
 [workspace.dependencies]
-ink = { version = "6.0.0-alpha", default-features = false, features = ["unstable-hostfn"] }
+ink = { version = "6.0.0-alpha", default-features = false }
 
 # scale = { package = "parity-scale-codec", version = "3", default-features = false, features = ["derive"] }
-scale-info = { version = "2.11.6", default-features = false, features = ["derive"] }
+scale-info = { version = "2.11.6", default-features = false, features = [
+    "derive",
+] }
