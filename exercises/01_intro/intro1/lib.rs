@@ -1,7 +1,7 @@
 // intro1
-// 
+//
 // Welcome to Inklings! This is your first ink! smart contract exercise.
-// 
+//
 // ink! is a Rust-based eDSL (embedded Domain Specific Language) for writing
 // smart contracts on Polkadot SDK chains. ink! v6 compiles to PolkaVM,
 // which is based on RISC-V.
@@ -20,7 +20,6 @@
 mod intro1 {
     // TODO: Add the storage attribute here
     // Storage holds the contract's state
-    #[ink(storage)]
     pub struct Intro1 {
         // A simple boolean value
         value: bool,

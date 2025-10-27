@@ -14,7 +14,7 @@ scale-info = { workspace = true }
 ink_e2e = "6.0.0-alpha"
 
 [lib]
-path = "src/lib.rs"
+path = "lib.rs"
 
 [features]
 default = ["std"]
