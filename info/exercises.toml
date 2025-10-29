@@ -1,0 +1,292 @@
+# Inklings Exercise Metadata and Hints
+# This file contains information about all exercises including hints,
+# learning objectives, and completion criteria.
+
+[[exercises]]
+id = "01_intro/intro1"
+name = "Your First ink! Contract"
+path = "exercises/01_intro/intro1"
+mode = "compile"
+hint = """
+You need to add two attributes to make this contract compile:
+
+1. Add `#[ink(storage)]` above the `Intro1` struct. This tells ink! that 
+   this struct holds the contract's state/storage.
+
+2. Add `#[ink(message)]` above the `get` function. This marks it as a 
+   public function that can be called by users.
+
+Remember: In ink! contracts:
+- `#[ink(storage)]` - marks the storage struct
+- `#[ink(constructor)]` - marks constructor functions
+- `#[ink(message)]` - marks public callable functions
+
+Look at the `flip` function to see an example of a properly annotated message!
+"""
+
+[[exercises]]
+id = "01_intro/intro2"
+name = "Adding Storage"
+path = "exercises/01_intro/intro2"
+mode = "compile"
+hint = """
+This exercise is about adding new storage fields to your contract.
+
+In ink!, storage fields can be:
+- Primitive types: bool, u32, u64, i32, i64, u128, i128
+- ink! types: String, Vec<T>, Mapping<K, V>
+- Custom types (that implement scale codec traits)
+
+To add a counter:
+1. Add a field to the storage struct: `counter: u32`
+2. Initialize it in the constructor
+3. Create a message to increment it
+4. Create a message to read it
+
+Don't forget the `#[ink(message)]` attribute on your public functions!
+"""
+
+[[exercises]]
+id = "02_basics/basic1"
+name = "Working with Numbers"
+path = "exercises/02_basics/basic1"
+mode = "test"
+hint = """
+This exercise focuses on arithmetic operations in ink! contracts.
+
+Key points:
+- Use checked arithmetic to avoid overflow: `checked_add`, `checked_sub`, `checked_mul`
+- Return `Result<T, E>` types to handle errors gracefully
+- The `#[ink(message)]` functions can return Results
+
+Example:
+```rust
+#[ink(message)]
+pub fn add(&mut self, value: u32) -> Result<(), Error> {
+    self.value = self.value.checked_add(value)
+        .ok_or(Error::Overflow)?;
+    Ok(())
+}
+```
+"""
+
+[[exercises]]
+id = "02_basics/basic2"
+name = "Using Mappings"
+path = "exercises/02_basics/basic2"
+mode = "test"
+hint = """
+Mappings in ink! are like HashMaps but optimized for blockchain storage.
+
+To use a Mapping:
+1. Import it: `use ink::storage::Mapping;`
+2. Add to storage: `balances: Mapping<AccountId, Balance>`
+3. Initialize in constructor: `balances: Mapping::default()`
+4. Insert: `self.balances.insert(account, value)`
+5. Get: `self.balances.get(account)` returns `Option<Balance>`
+
+Remember: `get()` returns an Option, so you need to handle the None case!
+
+Try using `unwrap_or(0)` to provide a default value for accounts that 
+don't exist in the mapping yet.
+"""
+
+[[exercises]]
+id = "03_storage/storage1"
+name = "Lazy Storage"
+path = "exercises/03_storage/storage1"
+mode = "test"
+hint = """
+ink! provides `Lazy<T>` for storing large values efficiently.
+
+Use `Lazy<T>` when:
+- The value is large and not accessed every time
+- You want to save gas by not loading it automatically
+
+Usage:
+```rust
+use ink::storage::Lazy;
+
+#[ink(storage)]
+pub struct MyContract {
+    large_data: Lazy<Vec<u8>>,
+}
+
+// In constructor:
+large_data: Lazy::new(vec![])
+
+// To access:
+self.large_data.get().unwrap()
+self.large_data.set(&new_value)
+```
+"""
+
+[[exercises]]
+id = "03_storage/storage2"
+name = "Storage Vectors"
+path = "exercises/03_storage/storage2"
+mode = "test"
+hint = """
+ink! provides `StorageVec<T>` for storing collections efficiently on-chain.
+
+Unlike regular `Vec<T>` which loads all elements into memory, `StorageVec<T>`
+loads elements lazily, saving gas.
+
+Usage:
+```rust
+use ink::storage::StorageVec;
+
+#[ink(storage)]
+pub struct MyContract {
+    items: StorageVec<Item>,
+}
+
+// Common operations:
+self.items.push(&item);
+self.items.get(index);  // Returns Option<Item>
+self.items.len();
+self.items.pop();
+```
+
+Remember to handle the `Option` returned by `get()`!
+"""
+
+[[exercises]]
+id = "04_events/events1"
+name = "Emitting Events"
+path = "exercises/04_events/events1"
+mode = "test"
+hint = """
+Events in ink! allow you to log important state changes for off-chain observers.
+
+To define and emit an event:
+
+1. Define the event struct:
+```rust
+#[ink(event)]
+pub struct Transfer {
+    #[ink(topic)]
+    from: Option<AccountId>,
+    #[ink(topic)]
+    to: Option<AccountId>,
+    value: Balance,
+}
+```
+
+2. Emit it in your message:
+```rust
+self.env().emit_event(Transfer {
+    from: Some(caller),
+    to: Some(recipient),
+    value: amount,
+});
+```
+
+Use `#[ink(topic)]` on fields you want to index for efficient filtering!
+"""
+
+[[exercises]]
+id = "04_events/events2"
+name = "Event Topics"
+path = "exercises/04_events/events2"
+mode = "test"
+hint = """
+Topics make events searchable and filterable.
+
+Key concepts:
+- Use `#[ink(topic)]` on fields you want to filter by
+- Maximum 4 topics per event (including the event signature)
+- Topics are indexed for efficient searching
+- Non-topic fields are just stored in the event data
+
+Example - making transfers searchable by sender OR recipient:
+```rust
+#[ink(event)]
+pub struct Transfer {
+    #[ink(topic)]
+    from: AccountId,
+    #[ink(topic)]
+    to: AccountId,
+    value: Balance,  // Not indexed, just data
+}
+```
+
+This allows querying like "show me all transfers FROM this account" or 
+"show me all transfers TO this account".
+"""
+
+[[exercises]]
+id = "05_advanced/advanced1"
+name = "Cross-Contract Calls"
+path = "exercises/05_advanced/advanced1"
+mode = "test"
+hint = """
+ink! contracts can call other contracts using trait-based calls.
+
+Steps:
+1. Define a trait for the target contract:
+```rust
+#[ink::trait_definition]
+pub trait OtherContract {
+    #[ink(message)]
+    fn get_value(&self) -> u32;
+}
+```
+
+2. Use it in your contract:
+```rust
+let other: ink::contract_ref!(OtherContract) = other_address.into();
+let value = other.get_value();
+```
+
+Remember: Cross-contract calls can fail, so handle errors appropriately!
+"""
+
+[[exercises]]
+id = "05_advanced/advanced2"
+name = "Payment Handling"
+path = "exercises/05_advanced/advanced2"
+mode = "test"
+hint = """
+ink! contracts can receive and send native tokens.
+
+To make a message payable:
+```rust
+#[ink(message, payable)]
+pub fn deposit(&mut self) {
+    let amount = self.env().transferred_value();
+    let caller = self.env().caller();
+    // Store the deposit
+}
+```
+
+To send tokens:
+```rust
+self.env().transfer(recipient, amount)?;
+```
+
+Key points:
+- Use `#[ink(message, payable)]` to accept payments
+- Get payment amount with `self.env().transferred_value()`
+- Transfer can fail, so return a Result
+- Check contract balance with `self.env().balance()`
+"""
+
+# Metadata for the exercise system
+[metadata]
+version = "0.1.0"
+total_exercises = 10
+
+# Categories help organize exercises
+[categories]
+intro = ["01_intro/intro1", "01_intro/intro2"]
+basics = ["02_basics/basic1", "02_basics/basic2"]
+storage = ["03_storage/storage1", "03_storage/storage2"]
+events = ["04_events/events1", "04_events/events2"]
+advanced = ["05_advanced/advanced1", "05_advanced/advanced2"]
+
+# Learning paths suggest an order
+[learning_paths]
+beginner = ["01_intro/intro1", "01_intro/intro2", "02_basics/basic1", "02_basics/basic2"]
+intermediate = ["03_storage/storage1", "03_storage/storage2", "04_events/events1", "04_events/events2"]
+advanced = ["05_advanced/advanced1", "05_advanced/advanced2"]
