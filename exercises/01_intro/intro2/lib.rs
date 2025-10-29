@@ -57,4 +57,26 @@ mod intro2 {
             todo!()
         }
     }
+    #[cfg(test)]
+    mod tests {
+        use super::*;
+        #[ink::test]
+        fn counter_works() {
+            let mut contract = Intro2::new();
+            assert_eq!(contract.get_counter(), 0);
+            contract.increment();
+            assert_eq!(contract.get_counter(), 1);
+            contract.increment();
+            assert_eq!(contract.get_counter(), 2);
+        }
+        #[ink::test]
+        fn balance_works() {
+            let mut contract = Intro2::new();
+            assert_eq!(contract.get_balance(), 0);
+            contract.set_balance(100);
+            assert_eq!(contract.get_balance(), 100);
+            contract.set_balance(200);
+            assert_eq!(contract.get_balance(), 200);
+        }
+    }
 }
