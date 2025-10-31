@@ -13,6 +13,17 @@ colored = "2.1"
 indicatif = "0.17"
 home = "0.5"
 
+# Integration test dependencies
+[dev-dependencies]
+tokio = { version = "1", features = ["full"] }
+subxt = "0.35"
+subxt-signer = "0.35"
+sp-core = "31"
+sp-keyring = "34"
+contract-transcode = "4.0"
+serde_json = "1.0"
+anyhow = "1.0"
+
 [workspace]
 members = ["exercises/*/*", "solutions/*/*"]
 resolver = "2"
