@@ -1,18 +1,3 @@
-// storage1
-//
-// This exercise teaches you about Lazy<T> storage in ink!
-//
-// Lazy<T> is useful for storing large values that aren't accessed frequently.
-// Unlike regular storage fields which are loaded automatically, Lazy<T> values
-// are only loaded when explicitly accessed, saving gas.
-//
-// Use cases:
-// - Contract metadata (name, symbol, description)
-// - Admin addresses that rarely change
-// - Large configuration objects
-//
-// Execute `inklings verify 03_storage/storage1` when you think you're done!
-
 #[ink::contract]
 mod storage1 {
     use ink::primitives::H160;
