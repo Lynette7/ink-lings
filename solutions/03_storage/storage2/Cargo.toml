@@ -1,0 +1,16 @@
+[package]
+name = "storage2-solutions"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+ink = { workspace = true, features = ["std"] }
+scale-info = { workspace = true, features = ["std"] }
+
+[lib]
+path = "lib.rs"
+
+[features]
+default = ["std"]
+std = ["ink/std", "scale-info/std"]
+ink-as-dependency = []

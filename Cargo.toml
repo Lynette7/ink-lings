@@ -14,14 +14,11 @@ indicatif = "0.17"
 home = "0.5"
 
 [workspace]
-members = [
-    "exercises/*/*",
-    "solutions/*/*",
-]
+members = ["exercises/*/*", "solutions/*/*"]
 resolver = "2"
 
 [workspace.dependencies]
-ink = { version = "6.0.0-alpha", default-features = false }
+ink = { version = "6.0.0-beta" }
 
 # scale = { package = "parity-scale-codec", version = "3", default-features = false, features = ["derive"] }
 scale-info = { version = "2.11.6", default-features = false, features = [
