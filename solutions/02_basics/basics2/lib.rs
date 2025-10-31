@@ -1,3 +1,4 @@
+#![allow(unexpected_cfgs)]
 #[ink::contract]
 mod basic2 {
     use ink::primitives::H160;

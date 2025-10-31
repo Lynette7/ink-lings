@@ -1,3 +1,4 @@
+#![allow(unexpected_cfgs)]
 #[ink::contract]
 mod intro1 {
     #[ink(storage)]

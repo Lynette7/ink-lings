@@ -1,3 +1,4 @@
+#![allow(unexpected_cfgs)]
 #[ink::contract]
 mod storage2 {
     use ink::prelude::vec::Vec;

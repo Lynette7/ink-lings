@@ -1,17 +1,4 @@
-// intro2
-//
-// This exercise will teach you about working with different storage types in ink!
-// ink! provides several storage types optimized for different use cases:
-// - Simple values (bool, u32, etc)
-// - Mappings - for key-value pairs
-//
-// Your task: Complete the storage struct and implement the missing functions.
-// Hints:
-// - Use u32 for the counter
-// - Use Mapping<AccountId, u128> for per-account balances
-// - Remember to initialize Mapping in the constructor
-//
-// Execute `inklings verify 01_intro/intro2` when you think you're done!
+#![allow(unexpected_cfgs)]
 #[ink::contract]
 mod intro2 {
     use ink::primitives::H160;

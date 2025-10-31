@@ -14,7 +14,7 @@
 // - Collections where you access one element at a time
 //
 // Execute `inklings verify 03_storage/storage2` when you think you're done!
-
+#![allow(unexpected_cfgs)]
 #[ink::contract]
 mod storage2 {
     use ink::prelude::vec::Vec;

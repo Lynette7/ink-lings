@@ -15,7 +15,7 @@
 // - Storage struct needs #[ink(storage)] attribute
 //
 // Execute `inklings verify intro1` when you think you're done!
-
+#![allow(unexpected_cfgs)]
 #[ink::contract]
 mod intro1 {
     // TODO: Add the storage attribute here

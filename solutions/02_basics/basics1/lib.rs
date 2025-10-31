@@ -1,3 +1,4 @@
+#![allow(unexpected_cfgs)]
 #[ink::contract]
 mod basic1 {
     /// Custom error types for the contract

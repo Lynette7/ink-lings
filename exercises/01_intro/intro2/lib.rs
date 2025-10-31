@@ -12,6 +12,7 @@
 // - Remember to initialize Mapping in the constructor
 //
 // Execute `inklings verify 01_intro/intro2` when you think you're done!
+#![allow(unexpected_cfgs)]
 #[ink::contract]
 mod intro2 {
     use ink::storage::Mapping;

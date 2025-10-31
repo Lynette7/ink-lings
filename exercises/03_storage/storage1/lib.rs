@@ -12,7 +12,7 @@
 // - Large configuration objects
 //
 // Execute `inklings verify 03_storage/storage1` when you think you're done!
-
+#![allow(unexpected_cfgs)]
 #[ink::contract]
 mod storage1 {
     use ink::primitives::H160;

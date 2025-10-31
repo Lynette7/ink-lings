@@ -24,3 +24,8 @@ ink = { version = "6.0.0-beta" }
 scale-info = { version = "2.11.6", default-features = false, features = [
     "derive",
 ] }
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = [
+    'cfg(ink_abi)',
+    'cfg(feature, values("ink-as-dependency"))',
+] }

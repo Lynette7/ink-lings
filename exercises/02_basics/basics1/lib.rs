@@ -8,7 +8,7 @@
 // Your task: Implement a simple calculator contract with safe arithmetic
 //
 // Execute `inklings verify 02_basics/basic1` when you think you're done!
-
+#![allow(unexpected_cfgs)]
 #[ink::contract]
 mod basic1 {
     /// Custom error types for the contract

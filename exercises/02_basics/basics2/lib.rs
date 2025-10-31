@@ -8,6 +8,7 @@
 // Your task: Implement a simple balance tracking contract using Mapping
 //
 // Execute `inklings verify 02_basics/basic2` when you think you're done!
+#![allow(unexpected_cfgs)]
 #[ink::contract]
 mod basic2 {
     use ink::primitives::H160;

@@ -1,0 +1,15 @@
+[package]
+name = "events1-solutions"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+ink = { workspace = true }
+scale-info = { workspace = true }
+
+[lib]
+path = "lib.rs"
+
+[features]
+default = ["std"]
+std = ["ink/std"]
