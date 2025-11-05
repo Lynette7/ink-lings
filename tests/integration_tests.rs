@@ -53,7 +53,7 @@ impl ContractTest {
     async fn deploy_contract(&self, constructor: &str, args: Vec<String>) -> Result<String> {
         let contract_file = self.build_contract()?;
 
-        println!("📤 Deploying contract from {:?}", contract_file);
+        println!("Deploying contract from {:?}", contract_file);
 
         // Use cargo-contract to deploy
         let mut cmd = Command::new("cargo");
@@ -88,7 +88,7 @@ impl ContractTest {
         let address = extract_contract_address(&output_str)
             .ok_or_else(|| anyhow::anyhow!("Failed to extract contract address"))?;
 
-        println!("✅ Contract deployed at: {}", address);
+        println!("Contract deployed at: {}", address);
         Ok(address)
     }
 
@@ -98,7 +98,7 @@ impl ContractTest {
         message: &str,
         args: Vec<String>,
     ) -> Result<String> {
-        println!("📞 Calling contract method: {}", message);
+        println!("Calling contract method: {}", message);
 
         let mut cmd = Command::new("cargo");
         cmd.args(&[
@@ -138,7 +138,7 @@ impl ContractTest {
         message: &str,
         args: Vec<String>,
     ) -> Result<String> {
-        println!("📖 Reading from contract: {}", message);
+        println!("Reading from contract: {}", message);
 
         let mut cmd = Command::new("cargo");
         cmd.args(&[
@@ -189,7 +189,7 @@ fn extract_contract_address(output: &str) -> Option<String> {
 #[tokio::test]
 #[ignore] // Run only with --ignored flag or when explicitly requested
 async fn test_intro1_integration() -> Result<()> {
-    let test = ContractTest::new("01_intro/intro1").await?;
+    let test = ContractTest::new("../exercises/01_intro/intro1").await?;
 
     // Deploy with default constructor
     let address = test.deploy_contract("default", vec![]).await?;
@@ -205,7 +205,7 @@ async fn test_intro1_integration() -> Result<()> {
     let output = test.read_contract(&address, "get", vec![]).await?;
     assert!(output.contains("true") || output.contains("Ok(true)"));
 
-    println!("✅ intro1 integration test passed!");
+    println!("intro1 integration test passed!");
     Ok(())
 }
 
@@ -222,7 +222,7 @@ async fn test_contract_with_args_integration() -> Result<()> {
     let output = test.read_contract(&address, "get", vec![]).await?;
     assert!(output.contains("true") || output.contains("Ok(true)"));
 
-    println!("✅ Contract with args integration test passed!");
+    println!("Contract with args integration test passed!");
     Ok(())
 }
 
