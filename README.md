@@ -385,8 +385,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - Inspired by [Rustlings](https://github.com/rust-lang/rustlings)
 - Inspired by [Starklings](https://github.com/shramee/starklings-cairo1)
-- Built with [ink!](https://github.com/paritytech/ink) by Parity Technologies
-- Powered by [PolkaVM](https://github.com/koute/polkavm)
+- Built for [ink!](https://github.com/paritytech/ink)
 
 ## Star History
 
