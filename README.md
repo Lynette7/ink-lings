@@ -4,23 +4,9 @@
 
 ink!lings provides a hands-on, interactive way to learn ink! smart contract development through a series of progressively challenging exercises. Similar to [Rustlings](https://github.com/rust-lang/rustlings) for Rust and [Starklings](https://github.com/shramee/starklings-cairo1) for Cairo, ink!lings guides you through the fundamentals and advanced concepts of ink! development.
 
-## Table of Contents
-
-- [What is ink!?](#what-is-ink)
-- [Features](#features)
-- [Installation](#installation)
-- [Quick Start](#quick-start)
-- [Usage](#usage)
-- [Exercise Structure](#exercise-structure)
-- [Progress Tracking](#progress-tracking)
-- [Contributing](#contributing)
-- [Resources](#resources)
-
-## What is ink!?
-
 **ink!** is a Rust-based embedded domain-specific language (eDSL) for writing smart contracts for blockchains built with the Polkadot SDK (formerly Substrate).
 
-### ink! v6 and PolkaVM
+## ink! v6 and PolkaVM
 
 **ink! v6 is a major evolution** that compiles to **PolkaVM** (based on RISC-V) instead of WebAssembly:
 
@@ -387,17 +373,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Inspired by [Starklings](https://github.com/shramee/starklings-cairo1)
 - Built for [ink!](https://github.com/paritytech/ink)
 
-## Star History
-
-If you find Inklings useful, please consider giving it a star ⭐
-
----
-
 ### Happy Learning! 🦑
-
-Start your ink! journey today:
-
-```bash
-cargo run -- list
-cargo run -- verify 01_intro/intro1
-```
