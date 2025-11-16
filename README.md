@@ -1,5 +1,7 @@
 # 🦑 ink!lings
 
+![alt text](<Screenshot 2025-11-15 at 12.25.15.png>)
+
 > Interactive exercises for learning [ink!](https://use.ink/) - the Rust-based eDSL for writing smart contracts on Polkadot SDK chains.
 
 ink!lings provides a hands-on, interactive way to learn ink! smart contract development through a series of progressively challenging exercises. Similar to [Rustlings](https://github.com/rust-lang/rustlings) for Rust and [Starklings](https://github.com/shramee/starklings-cairo1) for Cairo, ink!lings guides you through the fundamentals and advanced concepts of ink! development.
