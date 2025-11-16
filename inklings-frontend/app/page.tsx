@@ -31,8 +31,8 @@ export default function Home3DPage() {
   // swimming octopuses 
   const octos = [
     { size: 45, speed: 32, y: 200, opacity: 0.5, fromLeft: true, delay: 1 },
-    { size: 48, speed: 28, y: 150, opacity: 0.52, fromLeft: false, delay: 0.8 },
-    { size: 50, speed: 30, y: 250, opacity: 0.55, fromLeft: true, delay: 0.5 },
+    // { size: 48, speed: 28, y: 150, opacity: 0.52, fromLeft: false, delay: 0.8 },
+    // { size: 50, speed: 30, y: 250, opacity: 0.55, fromLeft: true, delay: 0.5 },
     { size: 46, speed: 29, y: 180, opacity: 0.5, fromLeft: false, delay: 1.2 },
   ]
 
@@ -63,7 +63,7 @@ export default function Home3DPage() {
         </motion.div>
       ))}
 
-      {/* Bubbles, hills, corals... (same as before) */}
+      {/* Bubbles and waves */}
       {[...Array(26)].map((_, i) => (
         <motion.div
           key={i}

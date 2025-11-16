@@ -9,7 +9,7 @@ const _geist = Geist({ subsets: ["latin"] })
 const _geistMono = Geist_Mono({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "inlinks - Learn Rust Smart Contracts",
+  title: "ink!lings",
   description: "Interactive web platform for learning Rust smart contract development with ink!",
   generator: "Next.app",
   icons: {
