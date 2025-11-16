@@ -31,8 +31,9 @@ export function Navbar() {
     <nav className="border-b border-border bg-card sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
         <Link href="/exercises" className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#6552D0] to-[#a350a3] flex items-center justify-center">
-            <span className="text-white font-bold text-sm">🦑</span>
+          <div className="w-8 h-8 rounded-lg bg-[#6552D0] flex items-center justify-center">
+            {/* <span className="text-white font-bold text-sm"></span> */}
+            <img src="/squid.png" alt="ink!lings logo" className="w-6 h-6" />
           </div>
           <span className="font-bold text-lg hidden sm:inline">ink!lings</span>
         </Link>
