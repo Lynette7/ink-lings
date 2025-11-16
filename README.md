@@ -1,6 +1,6 @@
 # 🦑 ink!lings
 
-![alt text](<Screenshot 2025-11-15 at 12.25.15.png>)
+![alt text](<inklings.png>)
 
 > Interactive exercises for learning [ink!](https://use.ink/) - the Rust-based eDSL for writing smart contracts on Polkadot SDK chains.
 
