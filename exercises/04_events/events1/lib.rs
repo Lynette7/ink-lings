@@ -16,11 +16,10 @@ mod events1 {
 
     /// Event emitted when the counter is incremented
     // TODO: Add the #[ink(event)] attribute here
-    todo!()
+    todo!();
     #[ink(event)]
     pub struct Incremented {
         // TODO: Add #[ink(topic)] to make the counter value searchable
-        todo!()
         value: u32,
         by: H160,
     }
