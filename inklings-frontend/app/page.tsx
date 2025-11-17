@@ -13,7 +13,7 @@ export default function Home3DPage() {
   const springX = useSpring(rotateX, { stiffness: 150, damping: 20 })
   const springY = useSpring(rotateY, { stiffness: 150, damping: 20 })
 
-  const [user, setUser] = useState(null) // replace with actual auth state
+  const [user, setUser] = useState(null)
 
   const handleMouseMove = (event) => {
     const rect = event.currentTarget.getBoundingClientRect()
@@ -30,9 +30,8 @@ export default function Home3DPage() {
 
   // swimming octopuses 
   const octos = [
-    { size: 45, speed: 32, y: 200, opacity: 0.5, fromLeft: true, delay: 1 },
-    // { size: 48, speed: 28, y: 150, opacity: 0.52, fromLeft: false, delay: 0.8 },
-    // { size: 50, speed: 30, y: 250, opacity: 0.55, fromLeft: true, delay: 0.5 },
+    { size: 45, speed: 20, y: 200, opacity: 0.5, fromLeft: true, delay: 1 },
+    { size: 50, speed: 26, y: 130, opacity: 0.6, fromLeft: false, delay: 0.5 },
     { size: 46, speed: 29, y: 180, opacity: 0.5, fromLeft: false, delay: 1.2 },
   ]
 
@@ -43,10 +42,10 @@ export default function Home3DPage() {
       onMouseLeave={handleMouseLeave}
     >
       <div className="absolute inset-0 bg-gradient-to-b from-[#110d45] via-[#0d0a32] to-[#08061e] pointer-events-none" />
-      
+
       {/* Floating squids */}
       {[{ left: 16, top: 12, delay: 0, rotateRange: [0, 4, 0, -4, 0] },
-        { left: 70, top: 520, delay: 1.5, rotateRange: [0, -3, 0, 3, 0] }
+      { left: 70, top: 520, delay: 1.5, rotateRange: [0, -3, 0, 3, 0] }
       ].map((squid, i) => (
         <motion.div
           key={i}
@@ -114,7 +113,7 @@ export default function Home3DPage() {
       {octos.map((o, i) => (
         <motion.div
           key={i}
-          className="absolute"
+          className="static"
           style={{ bottom: o.y, opacity: o.opacity }}
           animate={{
             x: o.fromLeft ? ["-15%", "110%"] : ["110%", "-15%"],
@@ -131,8 +130,11 @@ export default function Home3DPage() {
         </motion.div>
       ))}
 
-      {/* Heading + buttons */}
-      <motion.div style={{ rotateX: springX, rotateY: springY }} className="relative z-10 flex flex-col items-center justify-center h-full">
+      {/* Heading + buttons */}git add 
+      <motion.div
+        style={{ rotateX: springX, rotateY: springY }}
+        className="absolute inset-0 z-10 flex flex-col items-center justify-center"
+      >
         <motion.h1
           className="text-6xl font-bold tracking-tight mb-4"
           initial={{ y: -20, opacity: 0 }}
@@ -173,6 +175,7 @@ export default function Home3DPage() {
           </Link>
         </div>
       </motion.div>
+
     </div>
   )
 }
